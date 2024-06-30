@@ -51,8 +51,8 @@ document.getElementById('searchForm').addEventListener('submit', function(e) {
                     
                     try {
                         const data = JSON.parse(jsonStr);
-                        if (data['Bing Custom Search Results'] && !bingResultsDisplayed) {
-                            displayBingResults(data['Bing Custom Search Results']);
+                        if (data['Bing Search Results'] && !bingResultsDisplayed) {
+                            displayBingResults(data['Bing Search Results']);
                             bingResultsDisplayed = true;
                         }
                     } catch (e) {

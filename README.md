@@ -1,6 +1,5 @@
-# AI-Powered Web Search Application
-
-This application provides an AI-powered site search experience for a given brand or domain, leveraging OpenAI's language models and Bing's Custom Search  scapabilities.
+# Deep Search Results Page GenAI Answers for your Own Site (Low Code)
+This Low Code project leverages out of box Search capabilities and Open AI capabilities to enable a rich search experience for your website based solely on the public site information from your pages. The project uses Bing Custom Search to fetch relevant web pages based on a user's search query, leverages OpenAI's language models to pick up to a few of the pages that best answer the user's query, visits the pages to fetch and parse the text info on them, and then uses Open AI to generate comprehensive responses based on the page information.
 
 ## Project Structure
 
@@ -154,19 +153,23 @@ If you prefer to set up the project manually:
 - The AI system prompt is stored in `backend/sysprompt.txt`. Modify this file to change the behavior of the AI assistant.
 - Environment variables are managed through the `.env` file. Use `.env.template` as a guide to set up your own `.env` file.
 
-## Contributing
+**IMPORTANT:** This project is intended for educational purposes only and should not be used for production workloads. The creators and contributors of this project accept no responsibility for its functionality, reliability, or any consequences arising from its use.
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+**Disclaimer**
+Users of this project are solely responsible for ensuring their use complies with the terms and conditions of all third-party services utilized, including but not limited to Bing Custom Search, Azure services, and OpenAI. Users must also ensure their use of this project adheres to all applicable local, national, and international laws and regulations.
+
+The creators and contributors of this project are not responsible for any misuse, data breaches, costs incurred, or any other liabilities arising from the use of this project or the third-party services it integrates with.
+
+## Contributing
+Contributions to improve the educational value of this project are welcome. Please follow these steps to contribute:
 
 1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+2. Create a new branch for your feature or bug fix
+3. Make your changes and commit them with clear, descriptive messages
+4. Push your changes to your fork
+5. Submit a pull request with a clear description of your changes
 
 ## License
+This project is licensed for free use for educational and non-commercial purposes only. Commercial use is strictly prohibited. The software is provided "as is", without warranty of any kind, express or implied. In no event shall the authors or copyright holders be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or the use or other dealings in the software.
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-
-

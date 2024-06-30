@@ -33,7 +33,7 @@ document.getElementById('searchForm').addEventListener('submit', function(e) {
 
         const bingResultsDiv = document.createElement('div');
         bingResultsDiv.className = 'bing-results';
-        bingResultsDiv.innerHTML = '<h2>Bing Custom Search Results</h2><p>Loading...</p>';
+        bingResultsDiv.innerHTML = '<h2>Bing Search Results</h2><p>Loading...</p>';
         resultsDiv.appendChild(bingResultsDiv);
 
         function readStream() {
@@ -83,7 +83,7 @@ document.getElementById('searchForm').addEventListener('submit', function(e) {
 
 function displayBingResults(bingResults) {
     const bingResultsDiv = document.querySelector('.bing-results');
-    bingResultsDiv.innerHTML = '<h2>Bing Custom Search Results</h2>';
+    bingResultsDiv.innerHTML = '<h2>Bing Search Results</h2>';
 
     if (bingResults.webPages && bingResults.webPages.value) {
         bingResults.webPages.value.forEach(page => {

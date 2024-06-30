@@ -42,7 +42,7 @@ For a quick, automated setup of both the backend and frontend, use our setup scr
 1. Clone this repository and navigate to the project directory:
    ```
    git clone https://github.com/function1st/genaideepserp-public.git
-   cd genaideepserp
+   cd genaideepserp-public
    ```
 
 2. Make the setup script executable:

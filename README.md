@@ -41,7 +41,7 @@ For a quick, automated setup of both the backend and frontend, use our setup scr
 
 1. Clone this repository and navigate to the project directory:
    ```
-   git clone hhttps://github.com/function1st/genaideepserp.git
+   git clone https://github.com/function1st/genaideepserp.git
    cd genaideepserp
    ```
 

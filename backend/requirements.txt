@@ -1,0 +1,9 @@
+Flask
+flask-cors
+flask-socketio
+httpx[http2]
+openai
+lxml
+python-dotenv
+requests
+eventlet

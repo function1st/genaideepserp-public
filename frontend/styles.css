@@ -7,6 +7,11 @@ body {
     margin: 0 auto;
 }
 
+h1 {
+    font-size: 24px;  /* Reduced from the default size */
+    margin-bottom: 20px;
+}
+
 #searchForm {
     margin-bottom: 20px;
 }
@@ -34,6 +39,16 @@ body {
 
 .ai-response p {
     margin: 0 0 10px;
+}
+
+#processing-status {
+    font-style: italic;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+#processing-status p {
+    margin: 5px 0;
 }
 
 .bing-results {

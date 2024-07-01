@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deep SERP with GenAI Answers</title>
+    <title id="pageTitle">Deep SERP with GenAI Answers</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.3.2/markdown-it.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.js"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <img src="process.png" alt="Process Diagram" style="max-width: 85%; height: auto;">
-    <a href="https://github.com/function1st/genaideepserp-public" style="font-size: small;">https://github.com/function1st/genaideepserp-public</a>
-    <h1>Deep SERP with GenAI Answers</h1>
+    <h1 id="mainTitle">Deep SERP with GenAI Answers</h1>
     <form id="searchForm">
         <input type="text" id="query" placeholder="Enter your search query" required>
         <button type="submit" id="searchButton">Search</button>
     </form>
     <div id="results"></div>
+    <script src="config.js"></script>
     <script src="search_results.js"></script>
 </body>
 </html>

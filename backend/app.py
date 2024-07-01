@@ -6,7 +6,6 @@ import time
 import httpx
 from flask import Flask, request, jsonify, Response
 from flask_cors import CORS
-from flask_socketio import SocketIO, emit
 from lxml import html
 import openai
 import concurrent.futures
@@ -23,7 +22,6 @@ logging.basicConfig(level=logging.INFO)
 # Initialize Flask app
 app = Flask(__name__)
 CORS(app)  # Enable Cross-Origin Resource Sharing
-socketio = SocketIO(app, cors_allowed_origins="*")
 
 # Load configuration from environment variables
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
@@ -119,11 +117,12 @@ def fetch_and_parse_url(url, headers, timeout):
 
     return parsed_content, fetch_start_time, fetch_time, parse_start_time, parse_time
 
-def extract_meaningful_content_concurrently(urls):
+def extract_meaningful_content_concurrently(urls, yield_func):
     """
     Fetch and parse content from multiple URLs concurrently.
     
     :param urls: List of URL dictionaries to process
+    :param yield_func: Function to yield status updates
     :return: Tuple of (list of content dictionaries, list of timing dictionaries)
     """
     headers = {
@@ -153,6 +152,8 @@ def extract_meaningful_content_concurrently(urls):
                     "content": content,
                     "snippet": url.get('snippet', 'No snippet provided')
                 })
+                # Yield an event for each URL processed
+                yield_func(json.dumps({"event": "url_processed", "data": {"url": url.get('name', 'No title provided')}}))
             except Exception as exc:
                 logging.error(f"URL {url['url']} generated an exception: {exc}")
 
@@ -276,11 +277,6 @@ def calculate_total_content_timing(timings):
     parse_end_times = [t['parse_start_time'] + t['parse_time'] for t in timings]
     return max(parse_end_times) - min(fetch_start_times)
 
-@socketio.on('connect')
-def handle_connect():
-    """Handle WebSocket connection."""
-    emit('response', {'data': 'Connected'})
-
 @app.route('/websearch', methods=['POST'])
 def websearch():
     """
@@ -307,58 +303,61 @@ def websearch():
     max_tokens = 1000
     context_only = False
 
-    try:
-        # Perform Bing search immediately
-        bing_response, bing_timings = bing_search(query, BING_SUBSCRIPTION_KEY, CUSTOM_CONFIG_ID, initial_search_results, "en-US")
-        
-        # Prepare the initial response with Bing results
-        initial_response = {
-            "User Query": query,
-            "Bing Search Results": bing_response,
-            "Headers": {
-                "Set-Model": set_model,
-                "Max-Tokens": max_tokens,
-                "Initial-Search-Results": initial_search_results,
-                "Deep-Search-Quantity": deep_search_quantity,
-                "Deep-Search-Model": deep_search_model,
-                "Deep-Search": deepsearch,
-                "Context-Only": context_only
+    def generate():
+        try:
+            # Perform Bing search immediately
+            bing_response, bing_timings = bing_search(query, BING_SUBSCRIPTION_KEY, CUSTOM_CONFIG_ID, initial_search_results, "en-US")
+            
+            # Prepare the initial response with Bing results
+            initial_response = {
+                "event": "initial_response",
+                "data": {
+                    "User Query": query,
+                    "Bing Search Results": bing_response,
+                    "Headers": {
+                        "Set-Model": set_model,
+                        "Max-Tokens": max_tokens,
+                        "Initial-Search-Results": initial_search_results,
+                        "Deep-Search-Quantity": deep_search_quantity,
+                        "Deep-Search-Model": deep_search_model,
+                        "Deep-Search": deepsearch,
+                        "Context-Only": context_only
+                    }
+                }
             }
-        }
+            yield json.dumps(initial_response) + "\n"
 
-        def generate():
-            try:
-                # First, yield the initial response with Bing results
-                yield json.dumps(initial_response) + "\n\n"
+            # Continue with the rest of the processing
+            urls = extract_urls(bing_response)
+            url_dict = {url['url']: url for url in urls}
 
-                # Continue with the rest of the processing
-                urls = extract_urls(bing_response)
-                url_dict = {url['url']: url for url in urls}
-                selection_response, open_ai_pick_urls_timings, selection_token_usage = select_best_urls(urls, query, max_tokens, deep_search_quantity, deep_search_model)
-                selected_urls = selection_response.get('selected_urls', [])
+            # Yield event for determining best URLs
+            yield json.dumps({"event": "processing_status", "data": {"status": "Determining which Search results to leverage..."}}) + "\n"
+            selection_response, open_ai_pick_urls_timings, selection_token_usage = select_best_urls(urls, query, max_tokens, deep_search_quantity, deep_search_model)
+            selected_urls = selection_response.get('selected_urls', [])
 
-                for selected_url in selected_urls:
-                    selected_url.update(url_dict.get(selected_url['url'], {}))
+            for selected_url in selected_urls:
+                selected_url.update(url_dict.get(selected_url['url'], {}))
 
-                contents, content_timings = extract_meaningful_content_concurrently(selected_urls[:deep_search_quantity])
+            # Yield event for visiting pages
+            yield json.dumps({"event": "processing_status", "data": {"status": "Visiting pages and reading contents..."}}) + "\n"
+            contents, content_timings = extract_meaningful_content_concurrently(selected_urls[:deep_search_quantity], lambda x: (yield x + "\n"))
 
-                if not context_only:
-                    system_message, prompt_timings = fetch_system_prompt()
-                    user_message = "User Message: " + query + "\nContextual Content: " + "\n".join([f"{c['title']} {c['url']} {c['content']}" for c in contents])
-                    
-                    stream = stream_openai_chat_completion(system_message, user_message, set_model, max_tokens=max_tokens)
-                    for chunk in stream:
-                        if chunk.choices and chunk.choices[0].delta.content is not None:
-                            yield chunk.choices[0].delta.content
-            except Exception as e:
-                app.logger.error(f"Error in generate function: {str(e)}")
-                yield f"An error occurred: {str(e)}"
+            if not context_only:
+                system_message, prompt_timings = fetch_system_prompt()
+                user_message = "User Message: " + query + "\nContextual Content: " + "\n".join([f"{c['title']} {c['url']} {c['content']}" for c in contents])
+                
+                # Yield event for generating response
+                yield json.dumps({"event": "processing_status", "data": {"status": "Generating response from OpenAI..."}}) + "\n"
+                stream = stream_openai_chat_completion(system_message, user_message, set_model, max_tokens=max_tokens)
+                for chunk in stream:
+                    if chunk.choices and chunk.choices[0].delta.content is not None:
+                        yield json.dumps({"event": "ai_response", "data": {"content": chunk.choices[0].delta.content}}) + "\n"
+        except Exception as e:
+            app.logger.error(f"Error in generate function: {str(e)}")
+            yield json.dumps({"event": "error", "data": {"message": f"An error occurred: {str(e)}"}}) + "\n"
 
-        return Response(generate(), content_type='text/plain')
-
-    except Exception as e:
-        app.logger.error(f"Error in websearch route: {str(e)}")
-        return jsonify({"error": f"Processing failed: {str(e)}"}), 500
+    return Response(generate(), content_type='text/event-stream')
 
 # Main execution block
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
 # GenAI Deep Search Results Page with AI Answers for your Own Site (Low Code)
 This Low Code project leverages out of box Search capabilities and Open AI capabilities to enable a rich search experience for your website based solely on the public site information from your pages. The project uses Bing Custom Search to fetch relevant web pages based on a user's search query, leverages OpenAI's language models to pick up to a few of the pages that best answer the user's query, visits the pages to fetch and parse the text info on them, and then uses Open AI to generate comprehensive responses based on the page information.
 
-<img src="process.png" alt="Screenshot" width="100%">
+<img src="frontend/process.png" alt="Screenshot" width="100%">
 
 <img src="example.png" alt="Screenshot" width="300">
 

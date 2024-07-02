@@ -82,6 +82,40 @@ fi
 print_color $YELLOW "Updating API endpoint in frontend code..."
 sed -i '' "s|const API_URL = .*|const API_URL = 'http://localhost:5001/websearch';|" frontend/search_results.js
 
+# Create config.json file
+print_color $YELLOW "Creating config.json file..."
+cat > frontend/config.json << EOL
+{
+  "brand_name": "${brand_name}"
+}
+EOL
+
+# Create config.js file
+print_color $YELLOW "Creating config.js file..."
+cat > frontend/config.js << EOL
+// Function to load the configuration
+function loadConfig() {
+    fetch('config.json')
+        .then(response => response.json())
+        .then(config => {
+            const brandName = config.brand_name;
+            
+            // Update the page title
+            document.title = \`\${brandName} - Deep SERP with GenAI Answers\`;
+            
+            // Update the main title
+            const mainTitle = document.getElementById('mainTitle');
+            if (mainTitle) {
+                mainTitle.textContent = \`\${brandName} - Deep SERP with GenAI Answers\`;
+            }
+        })
+        .catch(error => console.error('Error loading config:', error));
+}
+
+// Load the configuration when the script runs
+loadConfig();
+EOL
+
 # Check if package.json exists in the frontend directory
 if [ -f "frontend/package.json" ]; then
     print_color $YELLOW "Installing frontend dependencies..."

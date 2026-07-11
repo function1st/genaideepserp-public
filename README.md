@@ -1,4 +1,5 @@
-# GenAI Deep Search Results Page with AI Answers for your Own Site (Low Code)
+# GenAI Deep Search Results Page with AI Answers for your Own Site (Low Code).
+
 This Low Code project leverages out of box Search capabilities and Open AI capabilities to enable a rich search experience for your website based solely on the public site information from your pages. The project uses Bing Custom Search to fetch relevant web pages based on a user's search query, leverages OpenAI's language models to pick up to a few of the pages that best answer the user's query, visits the pages to fetch and parse the text info on them, and then uses Open AI to generate comprehensive responses based on the page information.
 
 <img src="frontend/process.png" alt="Screenshot" width="100%">
@@ -27,12 +28,14 @@ project_root/
 ## Prerequisites
 
 Before setting up the project, ensure you have the following installed:
+
 - Python 3.7 or higher
 - pip (Python package manager)
 - Node.js and npm
 - Git
 
 You'll also need to obtain the following:
+
 - OpenAI API key
 - Bing Web API Subscription key
 - Bing Custom Search Configuration ID
@@ -46,17 +49,14 @@ For a quick, automated setup of both the backend and frontend, use our setup scr
    git clone https://github.com/function1st/genaideepserp-public.git
    cd genaideepserp-public
    ```
-
 2. Make the setup script executable:
    ```
    chmod +x setup.sh
    ```
-
 3. Run the setup script:
    ```
    ./setup.sh
    ```
-
 4. Follow the prompts to enter your:
    - OpenAI API key
    - Bing Web API Subscription key
@@ -73,24 +73,19 @@ After you've run the initial setup, you can use the `start.sh` script to easily 
    ```
    chmod +x start.sh
    ```
-
 2. Run the start script:
    ```
    ./start.sh
    ```
-
 3. The script will start both the backend and frontend servers.
-
 4. Access the application by opening a web browser and navigating to:
    ```
    http://localhost:8080
    ```
-
 5. The backend API will be available at:
    ```
    http://localhost:5001
    ```
-
 6. When you're done, press Enter in the terminal where you ran the start script to stop both servers.
 
 This script is useful for restarting the application after you've stopped it or if you've restarted your computer. It ensures that both the backend and frontend are properly started and connected.
@@ -103,7 +98,6 @@ If you need to stop the application at any time, you can use the `stop.sh` scrip
    ```
    chmod +x stop.sh
    ```
-
 2. Run the stop script:
    ```
    ./stop.sh
@@ -122,21 +116,17 @@ If you prefer to set up the project manually:
    source venv/bin/activate
    pip install -r requirements.txt
    ```
-
 2. Create a `.env` file in the `backend` directory based on `.env.template` and fill in your API keys.
-
 3. Set up the frontend:
    ```
    cd ../frontend
    npm install -g http-server
    ```
-
 4. Start the backend:
    ```
    cd ../backend
    python app.py
    ```
-
 5. In a new terminal, start the frontend:
    ```
    cd frontend
@@ -165,11 +155,13 @@ Users of this project are solely responsible for ensuring their use complies wit
 The creators and contributors of this project are not responsible for any misuse, data breaches, costs incurred, or any other liabilities arising from the use of this project or the third-party services it integrates with. This project is provided "as is" without any warranty, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose, and noninfringement. In no event shall the authors or copyright holders be liable for any claim, damages, or other liability, whether in an action of contract, tort, or otherwise, arising from, out of, or in connection with the software or the use or other dealings in the software.
 
 ## License
+
 This project is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License. To view a copy of this license, visit [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/).
 
 This project is licensed for free use for educational and non-commercial purposes only. Commercial use is strictly prohibited. The software is provided "as is", without warranty of any kind, express or implied. In no event shall the authors or copyright holders be liable for any claim, damages, or other liability, whether in an action of contract, tort, or otherwise, arising from, out of, or in connection with the software or the use or other dealings in the software.
 
 ## Contributing
+
 Contributions to improve the educational value of this project are welcome. Please follow these steps to contribute:
 
 1. Fork the repository
@@ -177,3 +169,4 @@ Contributions to improve the educational value of this project are welcome. Plea
 3. Make your changes and commit them with clear, descriptive messages
 4. Push your changes to your fork
 5. Submit a pull request with a clear description of your changes
+
